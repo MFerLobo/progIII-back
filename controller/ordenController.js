@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Orden from "../entity/orden.js";
 import Producto from "../entity/producto.js";
+import FacturaService from "../services/facturaService.js";
 
 /**
  * Realizar una compra (Clientes)
@@ -107,15 +108,30 @@ export const crearCompra = async (req, res, next) => {
       direccionEnvio: direccionFinal,
     });
 
-    const ordenPoblada = await Orden.findById(nuevaOrden._id).populate(
-      "usuario",
-      "nombre email telefono"
+    // 6. Generar automáticamente la factura fiscal asociada (Principio SRP delegado en FacturaService)
+    const facturaEmitida = await FacturaService.emitirFactura(
+      nuevaOrden._id,
+      req.body.datosFiscales || {}
     );
+
+    const ordenPoblada = await Orden.findById(nuevaOrden._id)
+      .populate("usuario", "nombre email telefono")
+      .populate("factura", "numeroFactura tipoComprobante total ivaTotal fechaEmision");
 
     res.status(201).json({
       success: true,
-      message: "¡Compra realizada con éxito! Su pedido fue registrado.",
+      message: "¡Compra realizada con éxito! Su pedido y factura fueron emitidos.",
       data: ordenPoblada,
+      factura: {
+        id: facturaEmitida._id,
+        numeroFactura: facturaEmitida.numeroFactura,
+        tipoComprobante: facturaEmitida.tipoComprobante,
+        subtotalNetoGravado: facturaEmitida.subtotalNetoGravado,
+        ivaTotal: facturaEmitida.ivaTotal,
+        total: facturaEmitida.total,
+        moneda: facturaEmitida.moneda,
+        cae: facturaEmitida.cae,
+      },
     });
   } catch (error) {
     next(error);
@@ -129,7 +145,8 @@ export const getMisCompras = async (req, res, next) => {
   try {
     const ordenes = await Orden.find({ usuario: req.usuario._id })
       .sort({ createdAt: -1 })
-      .populate("items.producto", "nombre sku imagenes");
+      .populate("items.producto", "nombre sku imagenes")
+      .populate("factura", "numeroFactura tipoComprobante total ivaTotal fechaEmision");
 
     res.status(200).json({
       success: true,
@@ -150,7 +167,8 @@ export const getCompraById = async (req, res, next) => {
     const { id } = req.params;
     const orden = await Orden.findById(id)
       .populate("usuario", "nombre email telefono")
-      .populate("items.producto", "nombre sku imagenes categoria marca");
+      .populate("items.producto", "nombre sku imagenes categoria marca")
+      .populate("factura");
 
     if (!orden) {
       return res.status(404).json({

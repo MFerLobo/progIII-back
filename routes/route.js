@@ -6,6 +6,7 @@ import marcaRoutes from "./marcaRoutes.js";
 import productoRoutes from "./productoRoutes.js";
 import usuarioRoutes from "./usuarioRoutes.js";
 import ordenRoutes from "./ordenRoutes.js";
+import facturaRoutes from "./facturaRoutes.js";
 
 const router = Router();
 
@@ -46,6 +47,13 @@ router.get("/health", (req, res) => {
         todasLasCompras: "GET /api/ordenes [Empleado / Admin]",
         cambiarEstado: "PATCH /api/ordenes/:id/estado [Empleado / Admin]",
       },
+      facturas: {
+        misFacturas: "GET /api/facturas/mis-facturas [Cliente]",
+        detalle: "GET /api/facturas/:id [Cliente / Empleado / Admin]",
+        porOrden: "GET /api/facturas/orden/:ordenId [Cliente / Empleado / Admin]",
+        todasLasFacturas: "GET /api/facturas [Empleado / Admin]",
+        emitirManual: "POST /api/facturas/orden/:ordenId [Empleado / Admin]",
+      },
       productos: {
         catalogo: "GET /api/productos [Público]",
         detalle: "GET /api/productos/:id [Público]",
@@ -72,6 +80,9 @@ router.use("/productos", productoRoutes);
 // Rutas de compras y pedidos (alias /compras y /ordenes)
 router.use("/ordenes", ordenRoutes);
 router.use("/compras", ordenRoutes);
+
+// Rutas de facturación fiscal
+router.use("/facturas", facturaRoutes);
 
 // Rutas de gestión de usuarios y roles
 router.use("/usuarios", usuarioRoutes);

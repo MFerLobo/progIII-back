@@ -25,5 +25,6 @@ import "./categorias.test.js";
 import "./marcas.test.js";
 import "./productos.test.js";
 import "./ordenes.test.js";
+import "./facturas.test.js";
 import "./usuarios.test.js";
 import "./middlewares.test.js";

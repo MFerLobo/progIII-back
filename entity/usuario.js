@@ -54,6 +54,21 @@ const usuarioSchema = new mongoose.Schema(
       type: direccionSchema,
       default: () => ({}),
     },
+    documentoTipo: {
+      type: String,
+      enum: ["DNI", "CUIT", "CUIL"],
+      default: "DNI",
+    },
+    documentoNumero: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    condicionIva: {
+      type: String,
+      enum: ["Consumidor Final", "Responsable Inscripto", "Monotributo"],
+      default: "Consumidor Final",
+    },
     activo: {
       type: Boolean,
       default: true,

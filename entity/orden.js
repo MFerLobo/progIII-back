@@ -89,6 +89,11 @@ const ordenSchema = new mongoose.Schema(
       type: direccionEnvioSchema,
       required: [true, "La dirección de envío es obligatoria."],
     },
+    factura: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Factura",
+      default: null,
+    },
   },
   {
     timestamps: true,

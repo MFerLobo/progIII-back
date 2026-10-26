@@ -4,6 +4,7 @@ import * as marcaController from "./marcaController.js";
 import * as productoController from "./productoController.js";
 import * as usuarioController from "./usuarioController.js";
 import * as ordenController from "./ordenController.js";
+import * as facturaController from "./facturaController.js";
 
 export {
   authController,
@@ -12,6 +13,7 @@ export {
   productoController,
   usuarioController,
   ordenController,
+  facturaController,
 };
 
 export default {
@@ -21,4 +23,5 @@ export default {
   producto: productoController,
   usuario: usuarioController,
   orden: ordenController,
+  factura: facturaController,
 };
