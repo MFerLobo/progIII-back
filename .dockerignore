@@ -1,0 +1,43 @@
+# Dependencias locales (se deben instalar dentro del contenedor Linux)
+node_modules/
+
+# Archivos de depuración y logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Variables de entorno locales y secretos (NUNCA incluirlos en la imagen Docker)
+.env
+.env.*
+!.env.example
+
+# Control de versiones Git
+.git/
+.gitignore
+
+# Pruebas y cobertura (no se requieren en la imagen de producción)
+tests/
+coverage/
+
+# Documentación de desarrollo
+DOCUMENTACION_TECNICA.md
+README.md
+
+# Archivos de configuración de editores e IDEs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Archivos temporales del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Cachés locales
+.cache/
+.npm/
