@@ -159,17 +159,33 @@ export const updateUsuario = async (req, res, next) => {
       usuario.email = email.trim().toLowerCase();
     }
 
-    // El admin puede cambiar roles (cliente, empleado, admin)
+
+    // El admin puede cambiar roles de otros usuarios,
+    // pero no puede modificar su propio rol.
     if (rol !== undefined) {
+
+      const esUsuarioActual =
+        req.usuario?._id?.toString() === id;
+
+      if (esUsuarioActual && rol !== usuario.rol) {
+        return res.status(403).json({
+          success: false,
+          message: "No podés modificar tu propio rol de administrador."
+        });
+      }
+
       const rolesValidos = ["admin", "empleado", "cliente"];
+
       if (!rolesValidos.includes(rol)) {
         return res.status(400).json({
           success: false,
-          message: `Rol '${rol}' inválido. Roles permitidos: ${rolesValidos.join(", ")}`,
+          message: `Rol '${rol}' inválido. Roles permitidos: ${rolesValidos.join(", ")}`
         });
       }
+
       usuario.rol = rol;
     }
+
 
     if (telefono !== undefined) usuario.telefono = telefono.trim();
     if (direccion !== undefined) usuario.direccion = direccion;
